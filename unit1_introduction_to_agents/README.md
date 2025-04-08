@@ -95,7 +95,7 @@ Each LLM has some special tokens specific to the model. The LLM uses these token
 
 LLMs are said to be autoregressive, meaning that **the output from one pass becomes the input for the next one**. In other words, an LLM will decode text until it reaches the EOS. 
 
-![Next Token Prediction](images/AutoregressionSchema.gif)
+![Next Token Prediction](../images/AutoregressionSchema.gif)
 
 ## Messages and Special Tokens
 
