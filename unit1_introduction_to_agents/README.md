@@ -152,3 +152,79 @@ As mentioned, chat templates are essential for **structuring conversations betwe
 - An Instruct Model is fine-tuned specifically to follow instructions and engage in conversations. For example, SmolLM2-135M is a base model, while SmolLM2-135M-Instruct is its instruction-tuned variant.
 
 To make a Base Model behave like an instruct model, we need to **format our prompts in a consistent way that the model can understand**. This is where chat templates come in.
+
+## What are Tools?
+
+### What are AI Tools?
+
+A **Tool is a function given to the LLM**. This function should fulfill a **clear objective**.
+
+A Tool should contain:
+- A textual description of what the function does.
+- A Callable (something to perform an action).
+- Arguments with typings.
+- (Optional) Outputs with typings.
+
+###  How do tools work?
+
+When we talk about providing tools to an Agent, we mean teaching the LLM about the existence of these tools and instructing it to generate text-based invocations when needed.
+
+### How do we give tools to an LLM?
+
+The system prompt provide textual descriptions of available tools to the model:
+
+![Give tools to an LLM](../images/Agent_system_prompt.png)
+
+For this to work, we have to be very precise and accurate about:
+- What the tool does
+- What exact inputs it expects
+
+Example:
+```
+Tool Name: calculator, Description: Multiply two integers., Arguments: a: int, b: int, Outputs: int
+```
+
+###  Auto-formatting Tool sections
+
+We could provide the Python source code as the specification of the tool for the LLM, but the way the tool is implemented does not matter. All that matters is its name, what it does, the inputs it expects and the output it provides.
+
+### Model Context Protocol (MCP): a unified tool interface
+
+**Model Context Protocol (MCP)** is an open protocol that standardizes how applications **provide tools to LLMs**. MCP provides:
+
+- A growing list of pre-built integrations that your LLM can directly plug into
+- The flexibility to switch between LLM providers and vendors
+- Best practices for securing your data within your infrastructure
+
+This means that any framework implementing MCP can leverage tools defined within the protocol, eliminating the need to reimplement the same tool interface for each framework.
+
+## Quick Quiz 2
+
+- Q1: Tools are executable functions that agents can use to perform specific tasks and interact with external environments.
+
+- Q2: Agents can invoke tools and use reasoning to plan and re-plan based on the information gained.
+
+- Q3: What is a Large Language Model (LLM)?
+    - A deep learning model trained on large amounts of text to understand and generate human-like language.
+
+-  Q4: Which of the following best describes the role of special tokens in LLMs?
+    - They serve specific functions like marking the end of a sequence (EOS) or separating different message roles in chat models.
+
+-  Q5: How do AI chat models process user messages internally?
+    -  They convert user messages into a formatted prompt by concatenating system, user, and assistant messages.
+
+##  Understanding AI Agents through the Thought-Action-Observation Cycle
+
+### The Core Components
+
+Agents work in a continuous cycle of: **thinking (Thought) → acting (Act) and observing (Observe)**.
+
+- **Thought**: The LLM part of the Agent decides what the next step should be.
+- **Action**: The agent takes an action, by calling the tools with the associated arguments.
+- **Observation**: The model reflects on the response from the tool.
+
+###  The Thought-Action-Observation Cycle
+
+![ The Thought-Action-Observation Cycle](../images/AgentCycle.gif)
+
+##  Thought: Internal Reasoning and the ReAct Approach
