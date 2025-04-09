@@ -228,3 +228,79 @@ Agents work in a continuous cycle of: **thinking (Thought) → acting (Act) and 
 ![ The Thought-Action-Observation Cycle](../images/AgentCycle.gif)
 
 ##  Thought: Internal Reasoning and the ReAct Approach
+
+Thoughts represent the **Agent’s internal reasoning and planning** processes to solve the task.
+
+This utilises the agent’s Large Language Model (LLM) capacity to **analyze information when presented in its prompt**.
+
+Through this process, the agent can **break down complex problems into smaller, more manageable steps**, reflect on past experiences, and continuously adjust its plans based on new information.
+
+### The ReAct Approach
+
+ReAct approach (“Reasoning” (Think) with “Acting” (Act)) is a simple prompting technique that appends “Let’s think step by step” before letting the LLM decode the next tokens.
+
+![ReAct Approach](../images/ReAct.png)
+
+```
+Models like DeepSeek R1 or OpenAI's o1 have been trained to always include specific thinking sections (enclosed between <think> and </think> special tokens). This is not just a prompting technique like ReAct, but a training method where the model learns to generate these sections after analyzing thousands of examples that show what we expect it to do.
+```
+
+### Actions: Enabling the Agent to Engage with Its Environment
+
+Actions are the **concrete steps an AI agent takes to interact with its environment**.
+
+### Types of Agent Actions
+
+![Types of Agent](../images/TypeAgents.png)
+
+![Types of Action](../images/TypeAction.png)
+
+### The Stop and Parse Approach: making agent’s output structured and predictable
+
+- Generation in a Structured Format:
+
+    - The agent outputs its intended action in a clear, predetermined format (JSON or code).
+
+- Halting Further Generation:
+
+    - Once the action is complete, the agent **stops generating additional tokens**. This prevents extra or erroneous output.
+
+- Parsing the Output:
+
+    - An external parser reads the formatted action, determines which Tool to call, and extracts the required parameters.
+
+### Code Agents
+
+ The idea is: instead of outputting a simple JSON object, a Code Agent **generates an executable code block**.
+
+ ![Code vs JSON Action](../images/code-vs-json-actions.png)
+
+ Advantages of this approach:
+
+ - Expressiveness
+ 
+ - Modularity and Reusability
+
+ - Enhanced Debuggability
+
+ - Direct Integration
+
+ ## Observe: Integrating Feedback to Reflect and Adapt
+
+ Observations are **how an Agent perceives the consequences of its actions**.
+
+- Collects Feedback: Receives data or confirmation that its action was successful (or not).
+
+- Appends Results: Integrates the new information into its existing context, effectively updating its memory.
+
+- Adapts its Strategy: Uses this updated context to refine subsequent thoughts and actions.
+
+![Types of Observation](../images/TypeObservations.png)
+
+### How Are the Results Appended?
+
+After performing an action, the framework follows these steps in order:
+
+- **Parse the action** to identify the function(s) to call and the argument(s) to use.
+- **Execute the action**.
+- **Append the result** as an **Observation**.
