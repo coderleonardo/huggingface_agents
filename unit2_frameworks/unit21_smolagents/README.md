@@ -88,3 +88,99 @@ See [notebook examples](./code_agents.ipynb).
 See also [secure code execution](https://huggingface.co/docs/smolagents/tutorials/secure_code_execution).
 
 In summary, smolagents specializes in agents that write and execute Python code snippets, offering sandboxed execution for security. It supports both local and API-based language models, making it adaptable to various development environments.
+
+## Writing actions as code snippets or JSON blobs
+
+**Tool Calling Agents**  use the built-in tool-calling capabilities of LLM providers to generate tool calls as JSON structures.
+
+For example, *CodeAgent* tool calling looks like 
+```
+for query in [
+    "Best catering services in Gotham City", 
+    "Party theme ideas for superheroes"
+]:
+    print(web_search(f"Search for: {query}"))
+```
+
+and *ToolCallingAgent* tool calling ooks like
+```
+[
+    {"name": "web_search", "arguments": "Best catering services in Gotham City"},
+    {"name": "web_search", "arguments": "Party theme ideas for superheroes"}
+]
+```
+
+ToolCallingAgents can be effective for simple systems that don’t require variable handling or complex tool calls.
+
+### How Do Tool Calling Agents Work?
+
+The key difference in `ToolCallingAgents` is in how they structure their actions: instead of executable code, they g**enerate JSON objects that specify tool names and arguments**. The system then parses these instructions to execute the appropriate tools.
+
+## Tools
+
+Tools are functions that an LLM can call within an agent system. 
+
+To interact with a tool, the LLM needs an **interface description** with these key components:
+
+- Name: What the tool is called
+- Tool description: What the tool does
+- Input types and descriptions: What arguments the tool accepts
+- Output type: What the tool returns
+
+Using this approach, we define a function with:
+
+- **A clear and descriptive function name** that helps the LLM understand its purpose.
+- **Type hints for both inputs and outputs** to ensure proper usage.
+- **A detailed description**, including an Args: section where each argument is explicitly described. These descriptions provide valuable context for the LLM.
+
+**Tool Calling Management**:
+![Tool Calling Management](../../images/Agent_ManimCE.gif)
+
+
+## Building Agentic RAG Systems
+
+Agentic RAG (Retrieval-Augmented Generation) extends traditional RAG systems by combining autonomous agents with dynamic knowledge retrieval, enabling intelligent control of both retrieval and generation processes, improving efficiency and accuracy.
+
+### Basic Retrieval Workflow
+
+1. Analyses the Request/Input Query
+
+2. Performs Retrieval
+
+3. Synthesizes Inoformation
+
+4. Stores for Future Reference
+
+### Custom Knowledge Base Tool
+
+For specialized tasks, a custom knowledge base can be invaluable. Let’s create a tool that queries a vector database - numerical representations (embeddings) of text or other data - of technical documentation or specialized knowledge. Using semantic search, the agent can find the most relevant information.
+
+With this the agent can
+
+- First check the documentation for relevant information
+- Combine insights from the knowledge base
+- Maintain conversation context in memory
+
+### Enhanced Retrieval Capabilities
+
+When building agentic RAG systems, the agent can employ sophisticated strategies like:
+
+1. Query Reformulation: Instead of using the raw user query, the agent can craft optimized search terms that better match the target documents
+2. Multi-Step Retrieval: The agent can perform multiple searches, using initial results to inform subsequent queries
+3. Source Integration: Information can be combined from multiple sources like web search and local documentation
+4. Result Validation: Retrieved content can be analyzed for relevance and accuracy before being included in responses
+
+## Quick Quiz
+
+- Q1: What is the key difference between creating a tool with the @tool decorator versus creating a subclass of Tool in smolagents?
+    - The @tool decorator is recommended for simple function-based tools, while subclasses of Tool offer more flexibility for complex functionality or custom metadata
+
+- Q2: How does a CodeAgent handle multi-step tasks using the ReAct (Reason + Act) approach?
+    - It cycles through writing internal thoughts, generating Python code, executing the code, and logging the results until it arrives at a final answer
+
+- Q4: ToolCallingAgent differs from CodeAgent in how it executes actions. How?
+    - ToolCallingAgent outputs JSON instructions specifying tool calls and arguments, which get parsed and executed
+
+## Multi-Agent Systems
+
+![Multi-Agent Systems](../../images/multi-agent-system.png)
